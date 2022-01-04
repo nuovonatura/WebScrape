@@ -1,5 +1,9 @@
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
 import pandas as pd
 import requests
 
@@ -10,10 +14,22 @@ StartDate = currDate - timedelta(days=1826)
 strStartDate = StartDate.strftime("%Y%m%d")
 strEndDate = currDate.strftime("%Y%m%d")
 
+testURL = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s1nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
+
+opts = Options()
+opts.add_argument("--headless")     # To opearte browser headless
+browser = Firefox(options=opts)
+browser.get(testURL)
+types = browser.find_element(By.ID, "types")
+alltype = types.find_elements(By.TAG_NAME, "li")
+for a in alltype:
+    print(a.text)
+browser.quit()
+
+'''
 # type: 全部 all，股票 gp，混合 hh，债券 zq，指数 zs，QDII qdii，LOF lof，FOF fof
 # 循环8次获得每个type的数据
 
-URL = "https://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=1nzf&st=desc&sd=2017-01-01&ed=2022-01-01&qdii=&tabSubtype=%2C%2C%2C%2C%2C&pi=1&pn=10000&dx=1&v=0.1481872336938801"
 URL1y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s1nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
 URL2y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s2nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
 URL3y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s3nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
@@ -33,3 +49,4 @@ print("encoding:" + str(resp.encoding))
 print("headers:" + str(resp.headers))
 print("raw:" + str(resp.raw))
 print(html1y.prettify())
+'''
