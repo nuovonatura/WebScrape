@@ -1,17 +1,19 @@
 from datetime import date, timedelta
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import wait
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 import pandas as pd
+import numpy
 import math
 import time
 
 SLEEP_DURATION = 15
+
+def toNumber(string):
+    if "--" in string:
+        return numpy.nan
+    else:
+        return float(string)
 
 # Obtain time period of 5 years
 
@@ -66,9 +68,9 @@ for type in typesLi:
     for i in range(top20):
         tdlist = trlist[i].find_elements(By.TAG_NAME, "td")
         code = tdlist[2].text
-        val = (tdlist[2].text, tdlist[3].text, tdlist[4].text, tdlist[5].text, tdlist[6].text, tdlist[7].text[:-1], 
-        tdlist[8].text[:-1], tdlist[9].text[:-1], tdlist[10].text[:-1], tdlist[11].text[:-1], tdlist[12].text[:-1], 
-        tdlist[13].text[:-1], tdlist[14].text[:-1], tdlist[15].text[:-1], tdlist[16].text[:-1], tdlist[17].text[:-1])
+        val = (tdlist[2].text, tdlist[3].text, tdlist[4].text, toNumber(tdlist[5].text), toNumber(tdlist[6].text), toNumber(tdlist[7].text[:-1]), 
+        toNumber(tdlist[8].text[:-1]), toNumber(tdlist[9].text[:-1]), toNumber(tdlist[10].text[:-1]), toNumber(tdlist[11].text[:-1]), toNumber(tdlist[12].text[:-1]), 
+        toNumber(tdlist[13].text[:-1]), toNumber(tdlist[14].text[:-1]), toNumber(tdlist[15].text[:-1]), toNumber(tdlist[16].text[:-1]), toNumber(tdlist[17].text[:-1]))
         temp1[code] = val
     print("5-year data acquired.")
 
@@ -136,7 +138,10 @@ with pd.ExcelWriter("Output.xlsx", engine="xlsxwriter", engine_kwargs={'options'
     col = ['基金代码', '基金简称', '日期', '单位净值', '累积净值', '日增长率', '近1周', '近1月', '近3月', '近6月', '近1年', '近2年', '近3年', '今年来', '成立来', '近5年']
     for (k, v) in data.items():
         df = pd.DataFrame.from_records(v, columns=col, coerce_float=True)
-        df.to_excel(writer, sheet_name=k, freeze_panes=(1, 4), float_format=True)
+        print(df.dtypes)
+        df.astype({'基金代码': 'int32', '单位净值': 'float64', '累积净值': 'float64', '日增长率': 'float64', '近1周': 'float64', '近1月': 'float64', '近3月': 'float64', 
+        '近6月': 'float64', '近1年': 'float64', '近2年': 'float64', '近3年': 'float64', '今年来': 'float64', '成立来': 'float64', '近5年': 'float64'})
+        df.to_excel(writer, sheet_name=k, freeze_panes=(1, 4))
         print(f"{k} sheet written.")
 
 print("Write to file done.")
