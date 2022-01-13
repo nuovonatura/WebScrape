@@ -7,7 +7,11 @@ import numpy
 import math
 import time
 
+# Sleep duration after each click on the button. Depends on the internet condition and CPU power.
+
 SLEEP_DURATION = 15
+
+# Change string to floating point.
 
 def toNumber(string):
     if "--" in string:
@@ -41,7 +45,7 @@ temp2 = {}
 
 typesDiv = browser.find_element(By.ID, "types")
 typesLi = typesDiv.find_elements(By.TAG_NAME, "li")
-for type in typesLi:
+for type in typesLi:        # Loops through each type including all
     text = type.text
     key = text[:text.find("(")]
     if key == "":
@@ -50,7 +54,7 @@ for type in typesLi:
     size[key] = totalNum
     data[key] = []
     type.click()
-    print(f"Obtaining {key} data...")
+    print(f"Scraping {key} data...")
     time.sleep(SLEEP_DURATION)
 
     dbtable = browser.find_element(By.ID, "dbtable")
@@ -138,35 +142,9 @@ with pd.ExcelWriter("Output.xlsx", engine="xlsxwriter", engine_kwargs={'options'
     col = ['基金代码', '基金简称', '日期', '单位净值', '累积净值', '日增长率', '近1周', '近1月', '近3月', '近6月', '近1年', '近2年', '近3年', '今年来', '成立来', '近5年']
     for (k, v) in data.items():
         df = pd.DataFrame.from_records(v, columns=col, coerce_float=True)
-        print(df.dtypes)
         df.astype({'基金代码': 'int32', '单位净值': 'float64', '累积净值': 'float64', '日增长率': 'float64', '近1周': 'float64', '近1月': 'float64', '近3月': 'float64', 
         '近6月': 'float64', '近1年': 'float64', '近2年': 'float64', '近3年': 'float64', '今年来': 'float64', '成立来': 'float64', '近5年': 'float64'})
         df.to_excel(writer, sheet_name=k, freeze_panes=(1, 4))
         print(f"{k} sheet written.")
 
 print("Write to file done.")
-
-'''
-# type: 全部 all，股票 gp，混合 hh，债券 zq，指数 zs，QDII qdii，LOF lof，FOF fof
-# 循环8次获得每个type的数据
-
-URL1y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s1nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
-URL2y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s2nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
-URL3y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s3nzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
-URL5y = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;sqjzf;pn10000;ddesc;qsd" + strStartDate + ";qed" + strEndDate + ";qdii;zq;gg;gzbd;gzfs;bbzt;sfbb"
-
-resp = requests.get(URL1y, stream=True)
-# resp1y = requests.get(URL1y)
-# resp2y = requests.get(URL2y)
-# resp3y = requests.get(URL3y)
-# resp5y = requests.get(URL5y)
-
-html1y = BeautifulSoup(resp.content, "html.parser")
-print("text:" + resp.text)
-print("content:" + str(resp.content))
-print("status code:" + str(resp.status_code))
-print("encoding:" + str(resp.encoding))
-print("headers:" + str(resp.headers))
-print("raw:" + str(resp.raw))
-print(html1y.prettify())
-'''
