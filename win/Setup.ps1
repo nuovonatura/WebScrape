@@ -9,13 +9,13 @@ else {
     Write-Host "Code is running as administrator — go on executing the script..." -ForegroundColor Green
 }
 Write-Progress -Activity "Installing required modules..." -PercentComplete 0
-Write-Progress -CurrentOperation "Installing Python Selenium"
+Write-Progress -Activity "Installing required modules..." -CurrentOperation "Installing Python Selenium"
 pip install selenium
 PAUSE
-Write-Progress -CurrentOperation "Installing Python Pandas" -PercentComplete 50
+Write-Progress -Activity "Installing required modules..." -CurrentOperation "Installing Python Pandas" -PercentComplete 50
 pip install pandas
 PAUSE
-Write-Progress -CurrentOperation "Installing Python numpy" -PercentComplete 80
+Write-Progress -Activity "Installing required modules..." -CurrentOperation "Installing Python numpy" -PercentComplete 80
 pip install numpy
 Write-Progress -Completed
 PAUSE
