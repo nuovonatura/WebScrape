@@ -1,1 +1,1 @@
-python funds.py
+python .\funds.py

@@ -32,7 +32,7 @@ testURL = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s1nzf;pn10
 
 opts = Options()
 opts.add_argument("--headless")     # To opearte browser headless
-browser = Edge(executable_path=".\win\msedgedriver.exe", options=opts)
+browser = Edge(executable_path=".\msedgedriver.exe", options=opts)
 browser.get(testURL)
 print("Browser ready.")
 
