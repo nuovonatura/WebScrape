@@ -1,6 +1,6 @@
 from datetime import date, timedelta
-from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import Edge
+from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 import pandas as pd
 import numpy
@@ -32,7 +32,7 @@ testURL = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s1nzf;pn10
 
 opts = Options()
 opts.add_argument("--headless")     # To opearte browser headless
-browser = Firefox(options=opts)
+browser = Edge(executable_path=".\win\msedgedriver.exe", options=opts)
 browser.get(testURL)
 print("Browser ready.")
 
