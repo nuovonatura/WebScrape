@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 from selenium.webdriver import Edge
+from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 import pandas as pd
@@ -32,7 +33,8 @@ testURL = "https://fund.eastmoney.com/data/fundranking.html#tall;c0;r;s1nzf;pn10
 
 opts = Options()
 opts.add_argument("--headless")     # To opearte browser headless
-browser = Edge(executable_path=".\msedgedriver.exe", options=opts)
+srvc = Service(executable_path=".\msedgedriver.exe")
+browser = Edge(service=srvc, options=opts)
 browser.get(testURL)
 print("Browser ready.")
 
